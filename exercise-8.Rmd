@@ -1,0 +1,54 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+#Exploring the cocoli dataset.
+
+```{r}
+cocoli_dat <- read.table("/home/eeb177-student/Desktop/eeb-177/class-assignments/classwork-21-Feb/cocoli.txt", header = TRUE)
+head(cocoli_dat)
+str(cocoli_dat)
+View(cocoli_dat)
+sizes_in_1994 <- cocoli_dat$dbh1
+names(sizes_in_1994) <- cocoli_dat$tag
+#names(sizes_in_1994)
+sizes_in_1994[1] # subset a vector by position
+sizes_in_1994["000001"] #subset a vector by name.
+
+#Find all instances of dbh =171
+sizes_in_1994=171
+
+#We want to know the fate of all trees that began 1994 with dbh 171
+#first, make a list of trees that we 171 dbh in 1994
+trees_171_1994= which(sizes_in_1994==171)
+trees_171_1994
+
+# in the 1997 list, find these individuals that used to eb 171
+
+sizes_in_1997[trees_171_1994]
+
+## Calculate RGR between 1997-1994
+
+cocoli_dat$dbh2-cocoli_dat$
+
+```
+
+##plots
+
+```{r}
+# make histograms with hist()
+#barplots with barplot()
+#barplots with boxplot()
+#scatter plot with plot()
+hist(cocoli_dat, xlab= "DBH in 1994 (mm)", main = "Distributions of sizes in 1994", col= "red")
+```
+
+```{r}
+cocoli_dat <- read.table("/home/eeb177-student/Desktop/eeb-177/class-assignments/classwork-21-Feb/cocoli.txt", header = TRUE)
+library(ggplot2)
+
+ggplot(cocoli_dat) + geom_histogram(aes(dbh1))
+```
+
+#markdown ::render()
