@@ -1,0 +1,120 @@
+---
+title: "markdown"
+output: md_document
+---
+
+#help.search("geom_", package = "ggplot2")
+#You can get a list of available geometric objects using the code.
+
+```{r}
+housing <- read.csv("dataSets/landdata-states.csv")
+head(housing[1:5])
+hist(housing$Home.Value)
+
+library(ggplot2)
+ggplot(housing, aes(x = Home.Value)) + geom_histogram()
+
+plot(Home.Value ~ Date,
+     data=subset(housing, State == "MA"))
+points(Home.Value ~ Date, col="red",
+       data=subset(housing, State == "TX"))
+legend(1975, 400000,
+       c("MA", "TX"), title="State",
+       col=c("black", "red"),
+       pch=c(1, 1))
+
+ggplot(subset(housing, State %in% c("MA", "TX")),
+       aes(x=Date,
+           y=Home.Value,
+           color=State))+
+  geom_point()
+
+hp2001Q1 <- subset(housing, Date == 2001.25) 
+ggplot(hp2001Q1,
+       aes(y = Structure.Cost, x = Land.Value)) +
+  geom_point()
+
+ggplot(hp2001Q1,
+       aes(y = Structure.Cost, x = log(Land.Value))) +
+  geom_point()
+
+hp2001Q1$pred.SC <- predict(lm(Structure.Cost ~ log(Land.Value), data = hp2001Q1))
+
+p1 <- ggplot(hp2001Q1, aes(x = log(Land.Value), y = Structure.Cost))
+
+p1 + geom_point(aes(color = Home.Value)) +
+  geom_line(aes(y = pred.SC))
+p1 +
+  geom_point(aes(color = Home.Value)) +
+  geom_smooth()
+
+p1 + 
+  geom_text(aes(label=State), size = 3)
+
+library("ggrepel")
+p1 + 
+  geom_point() + 
+  geom_text_repel(aes(label=State), size = 3)
+
+p1 +
+  geom_point(aes(size = 2),# incorrect! 2 is not a variable
+             color="red") # this is fine -- all points red
+
+p1 +
+  geom_point(aes(color=Home.Value, shape = region))
+```
+
+
+#Exercise 1.
+```{r}
+dat <- read.csv("dataSets/EconomistData.csv")
+head(dat)
+
+ggplot(dat, aes(x = CPI, y = HDI, size = HDI.Rank)) + geom_point()
+
+args(geom_histogram)
+args(stat_bin)
+
+p2 <- ggplot(housing, aes(x = Home.Value))
+p2 + geom_histogram()
+
+p2 + geom_histogram(stat = "bin", binwidth=4000)
+
+housing.sum <- aggregate(housing["Home.Value"], housing["State"], FUN=mean)
+rbind(head(housing.sum), tail(housing.sum))
+
+ggplot(housing.sum, aes(x=State, y=Home.Value)) + 
+  geom_bar(stat="identity")
+```
+
+#Exercise 2.
+```{r}
+dat <- read.csv("dataSets/EconomistData.csv")
+head(dat)
+ggplot(dat, aes(x = CPI, y = HDI)) +
+  geom_point() +
+  #2 geom_smooth()
+  #3. geom_smooth(method = "lm")
+ #4 geom_smooth(stat = "smooth", method="loess")
+#5
+  geom_smooth(span = .3)
+  
+```
+
+#Exercise 3.
+```{r}
+dat <- read.csv("dataSets/EconomistData.csv")
+head(dat)
+
+ggplot(dat, aes(x = CPI, y = HDI, color = "Region")) +
+  geom_point() +
+scale_x_continuous(name = "Corruption Perception Index") +
+scale_y_continuous(name = "Human Development Index") +
+ scale_color_manual(name = "Region of the world",
+                     values = c("#24576D",
+                                "#099DD7",
+                                "#28AADC",
+                                "#248E84",
+                                "#F2583F",
+                                "#96503F"))
+```
